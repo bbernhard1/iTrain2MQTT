@@ -18,7 +18,7 @@ Further settings can be done in the /src/settings.h file. Minimum but mandatory 
  This allow to mirror the status of any object assigend to the virtual z21 at a MQTT broker. Within iTrain this virtual objects can be used to trigger actions or to instance interact with physical objects assigned to other command stations.
 Currently supported objects types:
 - Set feedback status, including loco id. (simulate a railcom enabled feedback)
-- Set accessory status, either boolean(0/1) or any integer number in range 0-256
+- Set accessory status, either boolean(0/1) or any integer number in range 0-256 (currently broken, need iTrain update)
 - Get accessory status, either boolean(0/1) or any integer number in range 0-256
 
 >Currently no security credentials are supported. Furthermore input validataion is very basic.
