@@ -32,13 +32,13 @@ MQTT broker.
  - *Hostname*/Device/Uptime/*Version*
  
  Further topics are created once they are first time pushed. You may create it from your client. The gateway will automatically subscribe to all topics below this hirachy and forward it to the corresponding iTrain object:
- - *Hostaname*/Accessories/*AccessoryAdress*/*AccessoryState*
- - *Hostaname*/Sensors/*SensorAdress*/*SensorState*
+ - *Hostname*/Accessories/*AccessoryAdress*/*AccessoryState*
+ - *Hostname*/Sensors/*SensorAdress*/*SensorState*
 
 pls. Note: Objcts are matches with their adress and not by name. eg:
 iTrain2MQTT/Sensors/2/0    -> will set the iTrain feedback at virtual z21 with adress# 2 to "OFF"
 iTrain2MQTT/Sensors/3/1    -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON"
-iTrain2MQTT/Sensors/3/123  -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON" and report locoId 123 detected (simulate railcom behavior)
+iTrain2MQTT/Sensors/3/123  -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON" and report locoId 123 detected (simulate railcom locoId detection)
 
 The same methode is used for accessories.
 You may also create a accessory in iTrain and change the value. In thsi case the gateway creates the topic at the broker and push the value.
@@ -47,13 +47,8 @@ You may also create a accessory in iTrain and change the value. In thsi case the
 As usual the debug output is send to serial monitor with 115200 baud.
 A second debug output and and command input option is the use a telnet client.
 
+#### Project Status:
+Well, so far this is mostly experimental. Altough it is working fine on my system I would classify it as early alpha version. It mainly supports my private needs and might be discontinued without further notice. 
 
 #### Credits: 
 The project use the Arduino z21 Library kindly provided by Philipp Gahtow. https://pgahtow.de/w/Z21_mobile/en
-
-  
-  
-  
-  
-  
-
