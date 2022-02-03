@@ -36,9 +36,9 @@ MQTT broker.
  - *Hostname*/Sensors/*SensorAdress*/*SensorState*
 
 pls. Note: Objcts are matches with their adress and not by name. eg:
-iTrain2MQTT/Sensors/2/0    -> will set the iTrain feedback at virtual z21 with adress# 2 to "OFF"
-iTrain2MQTT/Sensors/3/1    -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON"
-iTrain2MQTT/Sensors/3/123  -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON" and report locoId 123 detected (simulate railcom locoId detection)
+iTrain2MQTT/Sensors/2/0    -> will set the iTrain feedback at virtual z21 with adress# 2 to "OFF"  
+iTrain2MQTT/Sensors/3/1    -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON"  
+iTrain2MQTT/Sensors/3/123  -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON" and report locoId 123 detected (simulate railcom locoId detection)  
 
 The same methode is used for accessories.
 You may also create a accessory in iTrain and change the value. In thsi case the gateway creates the topic at the broker and push the value.
