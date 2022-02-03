@@ -16,7 +16,7 @@ Further settings can be done in the /src/settings.h file. Minimum but mandatory 
 #### Limitations:
  iTrain does not offer a public interface to directly access internal objects. So a user based native integration is not possible. The workaround is to emulate a z21 command station which acts as a iTrain client and then push/receive messages to a MQTT broker. So this virtual z21 acts as a iTrain <> MQTT gateway.  
  This allow to mirror the status of any object assigend to the virtual z21 at a MQTT broker. Within iTrain this virtual objects can be used to trigger actions or to instance interact with physical objects assigned to other command stations.
-Currently supported objects types:  
+Currently supported objects types:
 - Set feedback status, including loco id. (simulate a railcom enabled feedback)
 - Set accessory status, either boolean(0/1) or any integer number in range 0-256 (currently broken, need iTrain update)
 - Get accessory status, either boolean(0/1) or any integer number in range 0-256
@@ -35,7 +35,7 @@ MQTT broker.
  - *Hostname*/Accessories/*AccessoryAdress*/*AccessoryState*
  - *Hostname*/Sensors/*SensorAdress*/*SensorState*
 
-pls. Note: Objcts are matches with their adress and not by name. eg:
+pls. Note: Objcts are matches with their adress and not by name. eg:  
 iTrain2MQTT/Sensors/2/0    -> will set the iTrain feedback at virtual z21 with adress# 2 to "OFF"  
 iTrain2MQTT/Sensors/3/1    -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON"  
 iTrain2MQTT/Sensors/3/123  -> will set the iTrain feedback at virtual z21 with adress# 3 to "ON" and report locoId 123 detected (simulate railcom locoId detection)  
