@@ -13,7 +13,8 @@ const char* MQTTBroker = "10.0.0.1";  // IPS Server
 const int MQTTPort = 1883;            // IPS MQTT Port
 const int iHeartBeat = 5000;          // Intervall for sending the uptime to MQTT broker 
 
-// Settings from 
+// Settings for z21 Lib
 #define Z21_UDP_TX_MAX_SIZE 15  //--> POM DATA has 12 Byte!
-unsigned char packetBuffer[Z21_UDP_TX_MAX_SIZE]; //buffer to hold incoming packet,
+unsigned char packetBuffer[Z21_UDP_TX_MAX_SIZE +1]; //buffer to hold incoming packet,
 #define maxIP 20  //Größe des IP-Speicher
+

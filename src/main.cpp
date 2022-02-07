@@ -117,7 +117,7 @@ void callback(char *topic, byte *payload, unsigned int length)
   if (sTopic.indexOf("/Accessories/") > -1)
   {
     int iAdr = sTopic.substring(sTopic.indexOf("/Accessories/") + 13).toInt();
-    z21.setExtACCInfo(iAdr + 3, sPayload.toInt(), 0); // this is fancy in iTrain, DCC accessories do not react on the command, only "Standard" is working (see readme)
+    z21.setExtACCInfo(iAdr + 3, sPayload.toInt(), 0); 
   }
 }
 
@@ -201,6 +201,7 @@ void setup()
   WiFi.mode(WIFI_STA);
   WiFi.setHostname(hostname.c_str()); // define hostname
   WiFi.begin(wifi_ssid, wifi_password);
+  WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
   while (WiFi.waitForConnectResult() != WL_CONNECTED)
   {
@@ -332,7 +333,7 @@ void loop()
    z21.setTrntInfo(1,true);
    delay (200);
    z21.setTrntInfo(1,false);
-  */
+*/
 
   // z21.setExtACCInfo(4,5,0xFF);
   /*
@@ -345,8 +346,8 @@ void loop()
   z21.setExtACCInfo(4,2,0);
     delay (200);
 
-    //delay(100);
-  */
+    delay(100);
+*/  
 
   yield();
 }

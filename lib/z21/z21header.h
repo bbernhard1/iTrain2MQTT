@@ -104,3 +104,6 @@
 //ab FW Version 1.30:
 #define Z21bcCANDetector	 0x08000000	//Meldungen vom Gelisbesetztmeldern am CAN-Bus
 #define Z21bcCANDetector_s	 B00000001     // B11000000    mod by bb
+
+#define SERIALDEBUG true
+#define ZDebug Serial
