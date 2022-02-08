@@ -3,7 +3,8 @@
 #### On the other hand the MQTT protocol is widely used in IoT applikations with tons of existing applikations and templates. So this can bring both together and allow easy implementation of special custom hardware with iTrain.
 
 #### Implementation:
- For simplification the gateway is prepared to run on a ESP8266uC. This allow easy integration without struggling with PC operating system specialities. At later state a conversion to Java in order to run as service on any PC is thinkable but not planned yet.  
+ For simplification the gateway is prepared to run on a uC. Either ESP8266 or ArduinoMega+EthernetSheeld is supported.  
+ This allow easy integration without struggling with PC operating system specialities. At later state a conversion to Java in order to run as service on any PC is thinkable but not planned yet.  
  The gateway connects to iTrain via Wifi by use of the Roco z21 protocol. From iTrain perspective it looks like a physical z21. Please consult the iTrain manual about z21 integration details. No special settings are necessary, all settings shall kept in default state. A second connection is initiated to a MQTT broker. 
  The MQTT broker need to be setup as standalone service, it is not part of the project. The IP address of the MQTT broker wheer the gateway shall connect is configurable. 
 
@@ -42,6 +43,11 @@ iTrain2MQTT/Sensors/3/123  -> will set the iTrain feedback at virtual z21 with a
 
 The same methode is used for accessories.
 You may also create a accessory in iTrain and change the value. In thsi case the gateway creates the topic at the broker and push the value.
+
+#### Platform 
+Its recomended to use a ArduinoMega + Ethernet sheeld rather than ESP WiFi. This is because it seems that Ethernet grants better stabillity for UDP protocoll than Wifi.  
+For myself I found sending data from iTrain -> Gateway sometimes fail when use Wifi, while Ethernet was 100% stable. Surprisingly the other direction from Gateway -> iTrain was stable with both options.  
+Maybe this si related to some ESP8266 lib issue with UDP or maybe a glitch with my Wifi AP, I could finally figure out thr background.  
 
 #### Debugging/Monitor:
 As usual the debug output is send to serial monitor with 115200 baud.
