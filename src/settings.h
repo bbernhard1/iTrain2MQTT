@@ -18,3 +18,6 @@ const int iHeartBeat = 5000;          // Intervall for sending the uptime to MQT
 unsigned char packetBuffer[Z21_UDP_TX_MAX_SIZE +1]; //buffer to hold incoming packet,
 #define maxIP 20  //Größe des IP-Speicher
 
+// MAC adress for the Arduino Sheeld 
+byte mac[] = { 0xFE, 0x00, 0xBE, 0xEF, 0xFE, 0xEC };
+

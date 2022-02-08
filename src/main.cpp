@@ -1,22 +1,35 @@
+
 #include <Arduino.h>
+
+
+
+#ifdef ARDUINO_ARCH_ESP8266 // include esp8266 specific libs
 #include <ArduinoOTA.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
-#include <EEPROM.h>
-#include "PubSubClient.h"
+#endif
 
+#ifdef ARDUINO_AVR_MEGA2560  // include ArduinoMega libs
+#include <SPI.h>
+#include <Ethernet.h>
+#include <EthernetUdp.h>
+#endif
+
+#include "PubSubClient.h"
 #include "settings.h"
 #include "secrets.h"
 #include "helpers.h" // all the calc fcuntions
-
 #include <z21.h>
 
 // declare the network instance
-WiFiServer TelnetServer(port);
-WiFiClient Telnet;
+#ifdef ARDUINO_AVR_MEGA2560
+EthernetUDP Udp;
+EthernetClient MQTTClient;
+#elif defined(ARDUINO_ARCH_ESP8266)
 WiFiUDP Udp;
 WiFiClient MQTTClient;
+#endif
 PubSubClient MQTTclient(MQTTClient);
 
 // create z21 instance
@@ -41,33 +54,6 @@ listofIP mem[maxIP];
 
 //--------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------
-// use telnet to receive commands
-void handleTelnet()
-{
-  if (TelnetServer.hasClient())
-  {
-    // client is connected
-    if (!Telnet || !Telnet.connected())
-    {
-      if (Telnet)
-        Telnet.stop();                   // client disconnected
-      Telnet = TelnetServer.available(); // ready for new client
-    }
-    else
-    {
-      TelnetServer.available().stop(); // have client, block new conections
-    }
-  }
-
-  if (Telnet.available())
-  {
-    // client input processing
-    while (Telnet.available())
-      commandStr = Telnet.readStringUntil('\n'); // read from Telnet
-  }
-}
-
-//--------------------------------------------------------------------------------------------
 // MQTT Callback
 void callback(char *topic, byte *payload, unsigned int length)
 {
@@ -83,11 +69,6 @@ void callback(char *topic, byte *payload, unsigned int length)
   Serial.print(sTopic);
   Serial.print("] ");
   Serial.println(sPayload);
-
-  Telnet.print("MQTT Message: [");
-  Telnet.print(sTopic);
-  Telnet.print("] ");
-  Telnet.println(sPayload);
 
   // check Message type
   // Sensor status received, send Adress and payload to z21
@@ -117,7 +98,7 @@ void callback(char *topic, byte *payload, unsigned int length)
   if (sTopic.indexOf("/Accessories/") > -1)
   {
     int iAdr = sTopic.substring(sTopic.indexOf("/Accessories/") + 13).toInt();
-    z21.setExtACCInfo(iAdr + 3, sPayload.toInt(), 0); 
+    z21.setExtACCInfo(iAdr + 3, sPayload.toInt(), 0);
   }
 }
 
@@ -188,12 +169,22 @@ void setup()
 {
   // Init Serial
   Serial.begin(115200);
+ 
+#ifdef ARDUINO_AVR_MEGA2560
+  // connect to Ethernet
+  Serial.println("Connecting to network");
+  while (!Ethernet.begin(mac))
+  {
+    Serial.println("Connection Failed! Wait...");
+    delay(1000);
+  }
 
-  // init EEprom
-  EEPROM.begin(4096);
+  delay(1000);
+  Serial.print("IP Address: ");
+  Serial.println(Ethernet.localIP());
 
+#elif defined(ARDUINO_ARCH_ESP8266)
   delay(100);
-
   // connect to WiFi
   Serial.printf("Connecting to %s ", wifi_ssid);
   delay(100);
@@ -209,11 +200,6 @@ void setup()
     delay(1000);
     ESP.restart();
   }
-
-  // UDP Z21 Port
-  Serial.println("Prepare UDP Port: ");
-  Serial.println(z21Port);
-  Udp.begin(z21Port);
 
   // OTA Stuff
   ArduinoOTA.setPort(iOTAPort);
@@ -266,12 +252,12 @@ void setup()
   Serial.println("Starting OTA");
   ArduinoOTA.begin();
 
-  // TELNET Stuff
-  TelnetServer.begin();
-  Serial.print("Starting telnet server on port " + (String)port);
-  TelnetServer.setNoDelay(true); // ESP BUG ?
-  Serial.println();
-  delay(100);
+#endif
+
+  // UDP Z21 Port
+  Serial.print("Prepare UDP Port: ");
+  Serial.println(z21Port);
+  Udp.begin(z21Port);
 
   // MQTT Stuff
   MQTTclient.setServer(MQTTBroker, MQTTPort);
@@ -284,18 +270,18 @@ void setup()
 // the main loop
 void loop()
 {
-  ArduinoOTA.handle();
-  handleTelnet();
+#ifdef ARDUINO_ARCH_ESP8266
+  ArduinoOTA.handle();  // OTA is only possible with ESP
+#endif
 
   // manage MQTT connection
   while (!MQTTclient.connected())
   {
-    Telnet.println("Connect to MQTT Broker");
     Serial.println("Connect to MQTT Broker");
     MQTTclient.connect(hostname.c_str());
     MQTTclient.subscribe("iTrain2MQTT/Sensors/#");
     MQTTclient.subscribe("iTrain2MQTT/Accessories/#");
-    delay(5000);
+    delay(1000);
   }
 
   MQTTclient.loop();
@@ -304,7 +290,8 @@ void loop()
   {
     String sTopic;
     sTopic = hostname + "/Device/IP Adresse";
-    MQTTclient.publish(sTopic.c_str(), WiFi.localIP().toString().c_str());
+    //    MQTTclient.publish(sTopic.c_str(), Ethernet.localIP());
+    //  MQTTclient.publish(sTopic.c_str(), WiFi.localIP().toString().c_str());
 
     sTopic = hostname + "/Device/Uptime";
     char uptime[10];
@@ -347,7 +334,7 @@ void loop()
     delay (200);
 
     delay(100);
-*/  
+*/
 
   yield();
 }
